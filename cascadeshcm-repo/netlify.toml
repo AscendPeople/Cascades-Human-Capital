@@ -1,0 +1,9 @@
+[build]
+  publish = "site"
+  functions = "netlify/functions"
+  # static site: no build command
+
+[functions]
+  node_bundler = "esbuild"
+
+# www -> apex and retired URLs are handled in site/_redirects

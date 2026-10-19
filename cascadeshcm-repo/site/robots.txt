@@ -1,0 +1,27 @@
+User-agent: *
+Allow: /
+Disallow: /diagnostic.html
+Disallow: /hr-readiness-checklist.html
+Disallow: /people-infrastructure-gap.html
+
+# AI search and assistant crawlers are allowed so Cascades can be cited in AI answers
+User-agent: GPTBot
+Allow: /
+User-agent: OAI-SearchBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: Claude-SearchBot
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: Google-Extended
+Allow: /
+User-agent: Applebot-Extended
+Allow: /
+User-agent: LinkedInBot
+Allow: /
+
+Sitemap: https://cascadeshcm.com/sitemap.xml
