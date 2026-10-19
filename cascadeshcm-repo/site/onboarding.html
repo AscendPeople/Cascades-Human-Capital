@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Welcome to Ascend People Solutions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#070d1a;--panel:#0e1626;--line:rgba(150,175,220,.16);--ink:#e8ecf4;--muted:#9fb0d0;--accent:#c98a3a;}
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(1200px 600px at 50% -10%,#12203c 0%,var(--bg) 60%);font-family:'Inter',system-ui,sans-serif;color:var(--ink);min-height:100vh;}
+  .wrap{max-width:720px;margin:0 auto;padding:48px 22px 60px;}
+  .eyebrow{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#7f92b8;}
+  h1{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(28px,5vw,40px);line-height:1.1;margin:12px 0 8px;}
+  .lead{color:var(--muted);font-size:15.5px;line-height:1.7;margin:0 0 26px;max-width:560px;}
+  .chat{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;}
+  .msgs{padding:22px;min-height:280px;max-height:56vh;overflow-y:auto;display:flex;flex-direction:column;gap:14px;}
+  .msg{font-size:15.5px;line-height:1.65;padding:12px 16px;border-radius:12px;max-width:88%;white-space:pre-wrap;}
+  .msg.a{background:rgba(160,185,230,.08);color:var(--ink);align-self:flex-start;border:1px solid var(--line);}
+  .msg.u{background:var(--accent);color:#0a0f1c;align-self:flex-end;font-weight:500;}
+  .bar{display:flex;gap:10px;border-top:1px solid var(--line);padding:14px;background:rgba(255,255,255,.02);}
+  .bar input{flex:1;background:#0a1120;border:1px solid var(--line);border-radius:10px;color:var(--ink);font-family:inherit;font-size:15px;padding:12px 14px;outline:none;}
+  .bar input:focus{border-color:rgba(201,138,58,.6);}
+  .bar button{background:var(--accent);color:#0a0f1c;border:none;border-radius:10px;font-family:inherit;font-weight:600;font-size:15px;padding:0 20px;cursor:pointer;}
+  .bar button:disabled{opacity:.5;cursor:default;}
+  .note{color:var(--muted);font-size:13px;margin-top:16px;line-height:1.6;}
+  .gate{color:var(--muted);font-size:15px;line-height:1.7;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:28px;}
+  a{color:#8fb0ff;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Cascades &middot; Ascend People Solutions</div>
+  <h1>Welcome. Let's set up your account.</h1>
+  <p class="lead">This takes just a few minutes. Our guide will ask a little about your organization and priorities so the Cascades team can provision Ascend People Solutions the way your team needs.</p>
+
+  <div id="app"></div>
+  <div class="note" id="privacy">Your responses are private and are shared only with the Cascades team.</div>
+</div>
+
+<script>
+(function(){
+  var params = new URLSearchParams(location.search);
+  var token = params.get('token');
+  var app = document.getElementById('app');
+  var history = [];
+  var done = false;
+
+  if(!token){
+    app.innerHTML = '<div class="gate">This onboarding link is missing or invalid. Please use the private link from your welcome email, or contact <a href="mailto:kimberlylenoir@cascadeshcm.com">kimberlylenoir@cascadeshcm.com</a> and we will help.</div>';
+    return;
+  }
+
+  app.innerHTML =
+    '<div class="chat">' +
+      '<div class="msgs" id="msgs"></div>' +
+      '<div class="bar"><input id="input" placeholder="Type your reply…" aria-label="Your reply" autocomplete="off"/>' +
+      '<button id="send" aria-label="Send">Send</button></div>' +
+    '</div>';
+
+  var msgs = document.getElementById('msgs');
+  var input = document.getElementById('input');
+  var sendBtn = document.getElementById('send');
+
+  function add(role, txt){
+    var d = document.createElement('div');
+    d.className = 'msg ' + (role === 'user' ? 'u' : 'a');
+    d.textContent = txt;
+    msgs.appendChild(d);
+    msgs.scrollTop = msgs.scrollHeight;
+    return d;
+  }
+
+  function post(){
+    return fetch('/.netlify/functions/onboarding', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ token: token, messages: history })
+    }).then(function(r){
+      if(r.status === 401) throw new Error('unauthorized');
+      return r.json();
+    });
+  }
+
+  function lock(v){ input.disabled = v; sendBtn.disabled = v; }
+
+  function handle(reply, isDone){
+    add('assistant', reply);
+    history.push({ role:'assistant', content: reply });
+    if(isDone){
+      done = true;
+      lock(true);
+      input.placeholder = 'Onboarding complete.';
+    }
+  }
+
+  function go(){
+    if(done) return;
+    var v = (input.value || '').trim();
+    if(!v) return;
+    add('user', v);
+    history.push({ role:'user', content: v });
+    input.value = '';
+    lock(true);
+    var thinking = add('assistant', '…');
+    post().then(function(d){
+      thinking.remove();
+      handle(d.reply || 'Thank you. Our team will follow up to complete your setup.', d.done);
+      lock(done);
+      if(!done) input.focus();
+    }).catch(function(err){
+      thinking.remove();
+      lock(false);
+      if(String(err.message) === 'unauthorized'){
+        add('assistant', 'This link is no longer valid. Please contact kimberlylenoir@cascadeshcm.com and we will send you a fresh one.');
+        lock(true);
+      } else {
+        add('assistant', 'Something went wrong just now. Please try again in a moment.');
+      }
+    });
+  }
+
+  sendBtn.addEventListener('click', go);
+  input.addEventListener('keydown', function(e){ if(e.key === 'Enter') go(); });
+
+  // Kick off with the guide's greeting.
+  lock(true);
+  var greeting = add('assistant', '…');
+  post().then(function(d){
+    greeting.remove();
+    handle(d.reply || 'Welcome. To begin, could you tell me your organization name, size, and industry?', d.done);
+    lock(done);
+    if(!done) input.focus();
+  }).catch(function(err){
+    greeting.remove();
+    if(String(err.message) === 'unauthorized'){
+      app.innerHTML = '<div class="gate">This onboarding link has expired or is not valid. Please contact <a href="mailto:kimberlylenoir@cascadeshcm.com">kimberlylenoir@cascadeshcm.com</a> and we will send you a fresh one.</div>';
+    } else {
+      handle('Welcome. To begin, could you tell me your organization name, size, and industry?', false);
+      lock(false);
+    }
+  });
+})();
+</script>
+</body>
+</html>
