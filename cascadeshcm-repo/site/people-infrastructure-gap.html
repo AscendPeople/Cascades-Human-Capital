@@ -154,7 +154,7 @@ table.mx{width:100%;border-collapse:collapse;margin-top:10px}
   .cp th{width:52px;font-size:6.5pt}
   .mx td{height:auto}
 }
-@page{size:letter;margin:0}
+
 @media print{
   body{background:#fff}
   .bar{display:none}
@@ -164,6 +164,58 @@ table.mx{width:100%;border-collapse:collapse;margin-top:10px}
   .cover,.cta,.mx th{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .mx select{appearance:none;-webkit-appearance:none}
   .mx textarea{border:0}
+}
+
+/* ===== v2 geometry: content box 7.5 x 10in, identical on screen and in print ===== */
+:root{--pad:.5in}
+.page{width:8.5in;height:11in;padding:var(--pad) var(--pad) calc(var(--pad) + .35in)}
+.pf{left:var(--pad);right:var(--pad);bottom:var(--pad)}
+.legal{left:var(--pad);right:var(--pad);bottom:calc(var(--pad) + .5in)}
+.p-first{padding-top:0}
+.cv{position:relative;overflow:hidden;background:var(--navy);color:#fff;margin:0 calc(var(--pad) * -1);padding:.55in .6in .5in;display:flex;flex-direction:column;min-height:5.1in}
+.cv .ridge{position:absolute;left:0;right:0;bottom:0;width:100%;opacity:.14;pointer-events:none}
+.cv .logo{height:46px;align-self:flex-start;position:relative}
+.cv .kick{margin-top:auto;font-size:9pt;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);position:relative}
+.cv h1{font-weight:800;text-transform:uppercase;letter-spacing:-.02em;line-height:.92;font-size:42pt;margin:12px 0 16px;position:relative}
+.cv .sub{font-family:'Spectral',Georgia,serif;font-style:italic;font-weight:300;font-size:14pt;line-height:1.4;color:#E4E8EF;margin:0 0 16px;max-width:26em;position:relative}
+.cv .q{font-size:11pt;font-weight:600;margin:0;position:relative;padding-top:14px;border-top:1px solid rgba(255,255,255,.25);max-width:30em}
+.intro{padding-top:.3in}
+.intro .lead{font-size:12.5pt;margin-bottom:10px}
+.intro .how{margin:14px 0 14px}
+.dot.n{background:#fff;box-shadow:none;border:4px double var(--ink)}
+.cp td.n input:checked{background:#fff;border:5px solid var(--ink)}
+.cp td.x input:checked{background:var(--gold);border-color:var(--gold);box-shadow:none}
+.mx td{height:62px}
+.mx textarea{height:44px}
+.asc-strip{margin-top:18px;padding-top:14px;border-top:1.5px solid var(--ink)}
+.asc-strip .climb{margin:6px 0 0;border-top:0}
+.asc-strip .climb>div{padding:8px 12px 4px}
+.asc-strip .climb h4{font-size:11pt;margin-bottom:4px}
+.asc-strip .climb p{font-size:8.6pt;margin-bottom:5px}
+.asc-strip .climb .you{padding-top:5px}
+.cta h2.t{margin-top:40px}
+@media print{
+  :root{--pad:0in}
+  @page{size:letter;margin:.5in}
+  html,body{width:auto;height:auto;background:#fff}
+  .pages{padding:0;display:block}
+  .page{width:7.5in;height:9.98in;padding:0 0 .35in;margin:0;overflow:hidden;box-shadow:none;page-break-after:always;break-after:page}
+  .page:last-of-type{page-break-after:auto;break-after:auto}
+  .p-first{padding-top:0}
+  .cv{margin:0;padding:.45in .5in .4in;min-height:4.8in}
+  .cta{padding:.35in .4in .35in}
+  .cta .pf{left:.4in;right:.4in;bottom:.3in}
+  .cta .legal{left:.4in;right:.4in;bottom:.8in}
+  .pf{bottom:0}
+  .legal{bottom:.45in}
+  .cp input[type=radio]{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .cv,.dot,.mx th,.cta{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+@media(max-width:880px){
+  .page{width:100%;height:auto}
+  .cv{margin:0 -20px;padding:28px 22px;min-height:0}
+  .cv h1{font-size:32pt}
+  .asc-strip .climb{grid-template-columns:1fr 1fr}
 }
 </style>
 <!-- Start of HubSpot Embed Code -->
@@ -181,44 +233,37 @@ table.mx{width:100%;border-collapse:collapse;margin-top:10px}
 </div>
 
 <main class="pages">
-
-  <!-- 1 Cover -->
-  <section class="page cover" aria-label="Cover">
-    <img class="ridge" src="assets/ridge.svg" alt=""/>
-    <img class="logo" src="assets/cascades-logo-white.png" alt="Cascades Human Capital Management"/>
-    <div class="kick">Executive checklist</div>
-    <h1>The People Infrastructure Gap</h1>
-    <p class="sub">25 executive checkpoints for organizations scaling without strategic HR leadership</p>
-    <div class="rule"></div>
-    <p class="q">Has your people infrastructure kept pace with your business?</p>
-    <div class="foot"><span>Cascades Human Capital Management</span><span>cascadeshcm.com</span></div>
-  </section>
-
-  <!-- 2 How to use -->
-  <section class="page" aria-label="How to use this checklist">
-    <div class="ph"><img src="assets/cascades-logo.png" alt=""/><span>The People Infrastructure Gap</span></div>
-    <h2 class="t">Growth exposes what was never designed.</h2>
-    <p class="lead">Most organizations build their people infrastructure one urgent need at a time. It works until the company outgrows it, and the cost shows up as slower decisions, avoidable turnover, and a CEO pulled back into problems that should be solved two levels down.</p>
-    <p>This checklist is designed for CEOs, founders, presidents, and COOs of organizations with roughly 50 to 500 employees. It takes about 15 minutes. It is not a compliance audit. It is a structured way to see where your people infrastructure may be constraining growth, adding risk, or creating cost you don't need to carry.</p>
-    <div class="how">
+  <section class="page p-first" aria-label="Cover and how to use">
+    <div class="cv">
+      <img class="ridge" src="assets/ridge.svg" alt=""/>
+      <img class="logo" src="assets/cascades-logo-white.png" alt="Cascades Human Capital Management"/>
+      <div class="kick">Executive checklist</div>
+      <h1>The People Infrastructure Gap</h1>
+      <p class="sub">25 executive checkpoints for organizations scaling without strategic HR leadership</p>
+      <p class="q">Has your people infrastructure kept pace with your business?</p>
+    </div>
+    <div class="intro">
+      <p class="lead">Most organizations build their people infrastructure one urgent need at a time. It works until the company outgrows it. Then the cost shows up as slower decisions, avoidable turnover, and a CEO pulled back into problems that should be solved two levels down.</p>
+      <p>Written for CEOs, founders, presidents, and COOs of organizations with roughly 50 to 500 employees. About 15 minutes. This is not a compliance audit. It shows where your people infrastructure may be constraining growth, adding risk, or creating cost you don't need to carry.</p>
+      <div class="how">
       <div><b>1 · Assess</b><p>Rate each of the 25 checkpoints honestly. If you're unsure, it is probably not established.</p></div>
       <div><b>2 · Prioritize</b><p>Weigh each gap by business impact, risk, and urgency, not by how many you have.</p></div>
       <div><b>3 · Act</b><p>Choose your three most consequential gaps and the next action for each.</p></div>
     </div>
-    <p class="eyebrow" style="margin-bottom:8px">Response options</p>
+      <p class="eyebrow" style="margin-bottom:8px">Response options</p>
     <div class="key">
       <span><i class="dot e"></i><b>Established</b>: documented, owned, and working today</span>
       <span><i class="dot n"></i><b>Needs improvement</b>: exists, but informal or inconsistent</span>
       <span><i class="dot" style="border-color:var(--gold)"></i><b>Not in place</b>: absent, or depends on one person</span>
     </div>
-    <p class="eyebrow" style="margin-bottom:8px">Five areas · five checkpoints each</p>
-    <div class="cats" id="catList"></div>
-    <div class="pf"><span>Cascades Human Capital Management</span><span>02</span></div>
+    </div>
+    <div class="pf"><span>Cascades Human Capital Management</span><span>01</span></div>
   </section>
 
-  <!-- 3–5 Checkpoints (rendered from data below) -->
-  <section class="page" aria-label="Checkpoints, areas 1 and 2"><div class="ph"><img src="assets/cascades-logo.png" alt=""/><span>The 25 checkpoints</span></div><div data-cats="0,1"></div><div class="pf"><span>Cascades Human Capital Management</span><span>03</span></div></section>
-  <section class="page" aria-label="Checkpoints, areas 3 and 4"><div class="ph"><img src="assets/cascades-logo.png" alt=""/><span>The 25 checkpoints</span></div><div data-cats="2,3"></div><div class="pf"><span>Cascades Human Capital Management</span><span>04</span></div></section>
+  <section class="page" aria-label="Checkpoints, areas 1 and 2"><div class="ph"><img src="assets/cascades-logo.png" alt=""/><span>The 25 checkpoints</span></div><div data-cats="0,1"></div><div class="pf"><span>Cascades Human Capital Management</span><span>02</span></div></section>
+
+  <section class="page" aria-label="Checkpoints, areas 3 and 4"><div class="ph"><img src="assets/cascades-logo.png" alt=""/><span>The 25 checkpoints</span></div><div data-cats="2,3"></div><div class="pf"><span>Cascades Human Capital Management</span><span>03</span></div></section>
+
   <section class="page" aria-label="Checkpoints, area 5 and summary">
     <div class="ph"><img src="assets/cascades-logo.png" alt=""/><span>The 25 checkpoints</span></div>
     <div data-cats="4"></div>
@@ -232,11 +277,10 @@ table.mx{width:100%;border-collapse:collapse;margin-top:10px}
       </table>
       <div class="note"><b>How to read this:</b> the totals tell you where to look, not how you score. A single "not in place" in Strategic HR Leadership can matter more than five in another area. The next page shows how to rank what you found.</div>
     </div>
-    <div class="pf"><span>Cascades Human Capital Management</span><span>05</span></div>
+    <div class="pf"><span>Cascades Human Capital Management</span><span>04</span></div>
   </section>
 
-  <!-- 6 Priorities -->
-  <section class="page" aria-label="From gaps to strategic priorities">
+  <section class="page" aria-label="Priorities and the Ascend Framework">
     <div class="ph"><img src="assets/cascades-logo.png" alt=""/><span>From gaps to strategic priorities</span></div>
     <h2 class="t">From gaps to strategic priorities</h2>
     <p class="lead" style="font-size:12.5pt">Not every gap deserves attention this quarter. Rank each one on three factors, then choose the three most consequential.</p>
@@ -255,26 +299,20 @@ table.mx{width:100%;border-collapse:collapse;margin-top:10px}
       <thead><tr><th style="width:30px">#</th><th>Identified gap</th><th style="width:110px">Business impact</th><th style="width:118px">Priority level</th><th>Recommended next action</th></tr></thead>
       <tbody id="mxBody"></tbody>
     </table>
-    <div class="pf"><span>Cascades Human Capital Management</span><span>06</span></div>
-  </section>
-
-  <!-- 7 Ascend -->
-  <section class="page" aria-label="The Ascend Framework">
-    <div class="ph"><img src="assets/cascades-logo.png" alt=""/><span>The Ascend Framework&trade;</span></div>
-    <h2 class="t">From assessment to sustainable performance</h2>
-    <p class="lead" style="font-size:12.5pt">The Ascend Framework&trade; is the Cascades method for moving an organization from where it is to where its strategy needs it to be, in a sequence the organization can absorb.</p>
-    <img class="peaks" src="assets/ridge.svg" alt="" style="opacity:.9;max-height:110px;object-fit:cover;object-position:bottom"/>
-    <div class="climb">
+    
+  <div class="asc-strip">
+      <p class="eyebrow" style="margin:0 0 4px">The Ascend Framework&trade; · from assessment to sustainable performance</p>
+      <div class="climb">
       <div><div class="st">Stage 1</div><h4>Base Camp</h4><p>Assess. Establish an evidence-based view of the gap between the strategy and the organization today.</p><p class="you">This checklist is your first read at Base Camp.</p></div>
       <div><div class="st">Stage 2</div><h4>The Ascent</h4><p>Build. Put the foundations in place: leadership accountability, structure, processes, and systems.</p><p class="you">Where most Priority 1 gaps are closed.</p></div>
       <div><div class="st">Stage 3</div><h4>The Peak</h4><p>Validate. Align leaders, roll changes out, and confirm they are working before scaling further.</p><p class="you">Where transformation becomes adoption.</p></div>
       <div><div class="st">Stage 4</div><h4>Sustainable Summit</h4><p>Sustain. Measure, adjust, and transfer capability so performance holds without outside support.</p><p class="you">Where infrastructure keeps pace on its own.</p></div>
     </div>
-    <div class="note">Each stage has an entry condition. An organization that skips Base Camp tends to rebuild the same infrastructure twice.</div>
-    <div class="pf"><span>Cascades Human Capital Management</span><span>07</span></div>
+    
+    </div>
+    <div class="pf"><span>Cascades Human Capital Management</span><span>05</span></div>
   </section>
 
-  <!-- 8 CTA -->
   <section class="page cta" aria-label="Next step">
     <div class="ph"><img src="assets/cascades-logo-white.png" alt=""/><span>Next step</span></div>
     <h2 class="t">Your next stage of growth requires more than HR administration.</h2>
@@ -287,7 +325,7 @@ table.mx{width:100%;border-collapse:collapse;margin-top:10px}
     <a class="btn" href="https://calendly.com/kimberly_lenoir/strategy-chat" target="_blank" rel="noopener">Schedule a 30-minute strategy consultation</a>
     <p class="contact">Bring this checklist to the conversation. &nbsp;<a href="https://calendly.com/kimberly_lenoir/strategy-chat">calendly.com/kimberly_lenoir/strategy-chat</a> · <a href="mailto:admin@cascadeshcm.com">admin@cascadeshcm.com</a> · <a href="https://cascadeshcm.com">cascadeshcm.com</a></p>
     <p class="legal">This checklist is a general management guide. It is not legal advice and does not replace a review of your obligations by qualified counsel. &copy; 2026 Cascades Human Capital Management LLC. Ascend Framework is a trademark of Cascades Human Capital Management LLC.</p>
-    <div class="pf"><span>Cascades Human Capital Management</span><span>08</span></div>
+    <div class="pf"><span>Cascades Human Capital Management</span><span>06</span></div>
   </section>
 </main>
 
@@ -329,7 +367,7 @@ var KEY='cascades_pig_v1';
 var saved={};try{saved=JSON.parse(localStorage.getItem(KEY)||'{}');}catch(e){}
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;');}
 var n=0;
-document.getElementById('catList').innerHTML=CATS.map(function(c,ci){return '<div><i>0'+(ci+1)+'</i><div><b>'+esc(c.t)+'</b><span>'+esc(c.w)+'</span></div></div>';}).join('');
+var _cl=document.getElementById('catList');if(_cl)_cl.innerHTML=CATS.map(function(c,ci){return '<div><i>0'+(ci+1)+'</i><div><b>'+esc(c.t)+'</b><span>'+esc(c.w)+'</span></div></div>';}).join('');
 document.querySelectorAll('[data-cats]').forEach(function(box){
   box.innerHTML=box.getAttribute('data-cats').split(',').map(function(ci){
     ci=+ci;var c=CATS[ci];

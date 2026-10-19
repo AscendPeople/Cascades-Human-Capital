@@ -50,7 +50,7 @@
   var done = false;
 
   if(!token){
-    app.innerHTML = '<div class="gate">This onboarding link is missing or invalid. Please use the private link from your welcome email, or contact <a href="mailto:kimberlylenoir@cascadeshcm.com">kimberlylenoir@cascadeshcm.com</a> and we will help.</div>';
+    app.innerHTML = '<div class="gate">This onboarding link is missing or invalid. Please use the private link from your welcome email, or contact <a href="mailto:admin@cascadeshcm.com">admin@cascadeshcm.com</a> and we will help.</div>';
     return;
   }
 
@@ -114,7 +114,7 @@
       thinking.remove();
       lock(false);
       if(String(err.message) === 'unauthorized'){
-        add('assistant', 'This link is no longer valid. Please contact kimberlylenoir@cascadeshcm.com and we will send you a fresh one.');
+        add('assistant', 'This link is no longer valid. Please contact admin@cascadeshcm.com and we will send you a fresh one.');
         lock(true);
       } else {
         add('assistant', 'Something went wrong just now. Please try again in a moment.');
@@ -136,7 +136,7 @@
   }).catch(function(err){
     greeting.remove();
     if(String(err.message) === 'unauthorized'){
-      app.innerHTML = '<div class="gate">This onboarding link has expired or is not valid. Please contact <a href="mailto:kimberlylenoir@cascadeshcm.com">kimberlylenoir@cascadeshcm.com</a> and we will send you a fresh one.</div>';
+      app.innerHTML = '<div class="gate">This onboarding link has expired or is not valid. Please contact <a href="mailto:admin@cascadeshcm.com">admin@cascadeshcm.com</a> and we will send you a fresh one.</div>';
     } else {
       handle('Welcome. To begin, could you tell me your organization name, size, and industry?', false);
       lock(false);

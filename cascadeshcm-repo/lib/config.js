@@ -7,7 +7,7 @@ const CONFIG = {
   model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-6',
 
   // Where lead and onboarding notifications go.
-  notifyEmail: process.env.NOTIFY_EMAIL || 'kimberlylenoir@cascadeshcm.com',
+  notifyEmail: process.env.NOTIFY_EMAIL || 'admin@cascadeshcm.com',
 
   // Verified Resend sender. Must be on the verified cascadeshcm.com domain.
   fromEmail: process.env.FROM_EMAIL || 'The Cascades Team <hello@cascadeshcm.com>',
