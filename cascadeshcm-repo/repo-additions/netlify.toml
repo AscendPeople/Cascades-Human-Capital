@@ -1,0 +1,10 @@
+[build]
+  publish = "site"
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+# Onboarding stall reminder: hourly
+[functions."onboarding-reminder"]
+  schedule = "0 * * * *"
