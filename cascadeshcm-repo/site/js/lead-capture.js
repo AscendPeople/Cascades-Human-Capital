@@ -141,23 +141,14 @@
   var fired = false, timer;
 
   function typing() { var a = document.activeElement; return a && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName); }
-  function scrolled(p) { var h = document.documentElement; return (h.scrollTop + innerHeight) / h.scrollHeight >= p; }
   function fire(trigger) {
     if (fired) return;
     if (typing()) { clearTimeout(timer); timer = setTimeout(function () { fire(trigger); }, 8000); return; }
     fired = true; ss(K.shown, '1');
-    window.removeEventListener('scroll', onScroll);
-    document.removeEventListener('mouseout', onExit);
     desktop ? openModal(trigger) : openBanner(trigger);
   }
-  function onScroll() { if (scrolled(desktop ? 0.35 : 0.4)) fire('scroll'); }
-  function onExit(e) { if (!e.relatedTarget && e.clientY <= 0) fire('exit_intent'); }
 
-  window.addEventListener('scroll', onScroll, { passive: true });
-  if (desktop) {
-    timer = setTimeout(function () { fire('time_12s'); }, 12000);
-    setTimeout(function () { document.addEventListener('mouseout', onExit); }, 4000);
-  }
+  fire('immediate');
 
   function href(t) { return LANDING + '?src=' + (desktop ? 'popup' : 'banner') + '_' + t + '#get'; }
 
