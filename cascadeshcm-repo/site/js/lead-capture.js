@@ -150,13 +150,13 @@
     document.removeEventListener('mouseout', onExit);
     desktop ? openModal(trigger) : openBanner(trigger);
   }
-  function onScroll() { if (scrolled(desktop ? 0.5 : 0.55)) fire('scroll'); }
+  function onScroll() { if (scrolled(desktop ? 0.35 : 0.4)) fire('scroll'); }
   function onExit(e) { if (!e.relatedTarget && e.clientY <= 0) fire('exit_intent'); }
 
   window.addEventListener('scroll', onScroll, { passive: true });
   if (desktop) {
-    timer = setTimeout(function () { fire('time_30s'); }, 30000);
-    setTimeout(function () { document.addEventListener('mouseout', onExit); }, 8000);
+    timer = setTimeout(function () { fire('time_12s'); }, 12000);
+    setTimeout(function () { document.addEventListener('mouseout', onExit); }, 4000);
   }
 
   function href(t) { return LANDING + '?src=' + (desktop ? 'popup' : 'banner') + '_' + t + '#get'; }
