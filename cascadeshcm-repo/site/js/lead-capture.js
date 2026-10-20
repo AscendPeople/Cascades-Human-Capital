@@ -148,7 +148,7 @@
     desktop ? openModal(trigger) : openBanner(trigger);
   }
 
-  fire('immediate');
+  timer = setTimeout(function () { fire('time_5s'); }, 5000);
 
   function href(t) { return LANDING + '?src=' + (desktop ? 'popup' : 'banner') + '_' + t + '#get'; }
 

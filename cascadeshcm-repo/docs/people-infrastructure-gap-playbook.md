@@ -79,7 +79,7 @@ Every submission also goes to **Netlify Forms** as `people-infrastructure-gap`, 
 
 ## 4. Pop-up rules (as built)
 
-- **Desktop and mobile:** opens immediately on page load. It waits if someone is typing in a form when it would otherwise fire.
+- **Desktop and mobile:** opens 5 seconds after page load. It waits if someone is typing in a form when it would otherwise fire.
 - **Frequency:** once per session, suppressed for 14 days after "Not now", and never shown again after a download.
 - **Never shown on:** the landing page, Connect, the document itself, the AI Index, or the Diagnostic.
 - **Accessibility:** a labelled dialog with focus held inside it. Escape, the × button, a click on the backdrop, or "Not now" closes it, and focus returns to where it was.
@@ -90,7 +90,7 @@ The script sends events to whichever tools are installed: Google Tag Manager or 
 
 | Event | Meaning |
 |---|---|
-| `pig_popup_impression` | Pop-up or banner shown (trigger: immediate) |
+| `pig_popup_impression` | Pop-up or banner shown (trigger: time_5s) |
 | `pig_popup_click` | CTA clicked |
 | `pig_popup_dismiss` | Closed or "Not now" |
 | `pig_inline_click` | People page promo clicked |
@@ -170,7 +170,7 @@ Link every post to `https://cascadeshcm.com/checklist.html?utm_source=linkedin&u
 - [ ] A contact is created in HubSpot with lifecycle stage Lead, `cascades_lead_source`, challenge, and entry point. The marketing checkbox maps to the subscription.
 - [ ] The Netlify Forms backup receives the same submission, including UTMs.
 - [ ] A test with `?utm_source=linkedin` shows the source on the contact.
-- [ ] The pop-up appears immediately on page load. "Not now" suppresses it, and so does a download. It doesn't appear on Connect or the landing page.
+- [ ] The pop-up appears about 5 seconds after page load. "Not now" suppresses it, and so does a download. It doesn't appear on Connect or the landing page.
 - [ ] On mobile, the banner appears after scrolling, can be dismissed, and doesn't block content.
 - [ ] Keyboard only: Tab stays inside the pop-up, and Escape closes it.
 - [ ] Document: responses persist after reload, the summary fills in, the matrix lists the marked gaps, the printed PDF has 8 pages, and the CTA link is clickable in the PDF.
