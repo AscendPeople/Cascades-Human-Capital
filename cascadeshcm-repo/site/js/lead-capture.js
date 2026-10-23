@@ -1,15 +1,10 @@
 /* Cascades: People Infrastructure Gap lead capture
-   - gated form (HubSpot Forms API + Netlify Forms backup)
+   - gated form (Netlify Forms, emailed to the team on submission)
    - desktop pop-up / mobile banner
    - privacy-conscious event tracking (fires only into tools you have installed) */
 (function () {
   'use strict';
 
-  /* ---------- CONFIG: fill in from HubSpot (Marketing > Forms > form > Share > Embed code) ---------- */
-  var HUBSPOT = {
-    portalId: '247696322',
-    formGuid: ''    // e.g. 'a1b2c3d4-....'
-  };
   var DOC_URL = 'people-infrastructure-gap.html';
   var LANDING = 'checklist.html';
   var DISMISS_DAYS = 14;
@@ -24,7 +19,6 @@
     try { (window.dataLayer = window.dataLayer || []).push(Object.assign({ event: name }, props)); } catch (e) {}
     try { if (typeof window.plausible === 'function') window.plausible(name, { props: props }); } catch (e) {}
     try { if (typeof window.gtag === 'function') window.gtag('event', name, props); } catch (e) {}
-    try { if (window._hsq) window._hsq.push(['trackCustomBehavioralEvent', { name: name, properties: props }]); } catch (e) {}
   }
   window.cascadesTrack = track;
 
@@ -38,7 +32,6 @@
     ss(K.utm, JSON.stringify(o));
   })();
   function utm() { try { return JSON.parse(ss(K.utm) || '{}'); } catch (e) { return {}; } }
-  function cookie(n) { var m = document.cookie.match('(?:^|; )' + n + '=([^;]*)'); return m ? decodeURIComponent(m[1]) : ''; }
 
   document.addEventListener('click', function (e) {
     var a = e.target.closest && e.target.closest('[data-track]');
@@ -70,47 +63,14 @@
       btn.disabled = true; btn.textContent = 'Preparing your checklist\u2026';
 
       var fd = new FormData(form), u = utm();
-      var name = (fd.get('name') || '').trim().split(/\s+/);
       var consent = fd.get('marketing_consent') === 'yes';
 
-      // 1) Netlify Forms backup (always): nothing is lost if HubSpot is misconfigured
+      // Netlify Forms: triggers the submission-created function, which emails the team.
       Object.keys(u).forEach(function (k) { fd.append(k, u[k]); });
       fd.append('entry_point', src);
-      var netlify = fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(fd).toString() });
-
-      // 2) HubSpot Forms API (when configured)
-      var hubspot = Promise.resolve({ ok: true, skipped: true });
-      if (HUBSPOT.portalId && HUBSPOT.formGuid) {
-        var fields = [
-          { name: 'firstname', value: name[0] || '' },
-          { name: 'lastname', value: name.slice(1).join(' ') },
-          { name: 'email', value: (fd.get('email') || '').trim() },
-          { name: 'company', value: (fd.get('company') || '').trim() },
-          { name: 'jobtitle', value: (fd.get('jobtitle') || '').trim() },
-          { name: 'hr_challenge', value: fd.get('hr_challenge') || '' },
-          { name: 'cascades_lead_source', value: 'HR Checklist Download' },
-          { name: 'cascades_service_interest', value: 'Fractional / Interim HR Leadership' },
-          { name: 'cascades_entry_point', value: src }
-        ];
-        var payload = {
-          fields: fields,
-          context: { hutk: cookie('hubspotutk') || undefined, pageUri: location.href, pageName: document.title },
-          legalConsentOptions: {
-            consent: {
-              consentToProcess: true,
-              text: 'I agree to allow Cascades Human Capital Management to store and process my personal data to send the requested resource.',
-              communications: [{ value: consent, subscriptionTypeId: 999, text: 'Occasional insights on HR leadership and workforce transformation.' }]
-            }
-          }
-        };
-        hubspot = fetch('https://api.hsforms.com/submissions/v3/integration/submit/' + HUBSPOT.portalId + '/' + HUBSPOT.formGuid, {
-          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
-        });
-      }
-
-      Promise.allSettled([netlify, hubspot]).then(function (r) {
-        var anyOk = r.some(function (x) { return x.status === 'fulfilled' && x.value && x.value.ok && !x.value.skipped; });
-        if (!anyOk) throw new Error('no destination accepted the submission');
+      fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(fd).toString() })
+      .then(function (r) {
+        if (!r.ok) throw new Error('submission not accepted');
         ls(K.done, '1');
         track('pig_form_complete', { src: src, challenge: fd.get('hr_challenge') || 'none', consent: consent ? 'yes' : 'no' });
         showDone(true);
