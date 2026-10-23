@@ -39,7 +39,7 @@
       count.textContent=('0'+(i+1)).slice(-2)+' / '+('0'+slides.length).slice(-2);
     }
     var paused=false;
-    function reset(){clearInterval(timer);if(!paused)timer=setInterval(function(){go(i+1);},4500);}
+    function reset(){clearInterval(timer);if(!paused)timer=setInterval(function(){go(i+1);},2000);}
     var hero=document.querySelector('.hero');
     if(hero){
       var pb=document.createElement('button');
