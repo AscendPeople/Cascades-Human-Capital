@@ -3,6 +3,13 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-75782ZTM4X"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-75782ZTM4X');
+</script>
 <title>Book a Consult with an HR Advisor | Cascades HCM</title>
 <meta name="description" content="Book a free 60-minute consultation or send an inquiry to Cascades, an HR advisory and fractional HR leadership firm serving clients nationally and internationally."/>
 <link rel="icon" href="assets/cascades-logo.png"/>
@@ -152,6 +159,16 @@
   tabs.forEach(function(t){t.addEventListener('click',function(){show(t.getAttribute('data-panel'));});});
   if(location.hash==='#inquiry')show('inquiry');
   else if(location.hash==='#call')show('call');
+})();
+</script>
+<script>
+(function(){
+  window.addEventListener('message', function (e) {
+    if (e.origin !== 'https://calendly.com') return;
+    if (e.data && e.data.event === 'calendly.event_scheduled' && typeof gtag === 'function') {
+      gtag('event', 'schedule_appointment', { method: 'calendly' });
+    }
+  });
 })();
 </script>
 </main>
